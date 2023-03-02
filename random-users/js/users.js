@@ -3,11 +3,7 @@
 const loadRandomUser = async (searchBy='') => {
   const url = "https://randomuser.me/api/?gender=" + searchBy;
 
-    // fetch(url)
-    // .then(res => res.json())
-    // .then(data => {
-    //     console.log(data);
-    // })
+   
 
     try {
         const res = await fetch(url);
@@ -25,7 +21,7 @@ const loadRandomUser = async (searchBy='') => {
 const showRandomUser = (data)=> {
     const randomUserContainer = document.getElementById("random_user_container");
    randomUserContainer.innerHTML = "";
-    console.log(data);
+  //  console.log(data);
     const { picture, name, location,phone, email, gender,cell } = data;
     const { city, street, country, state, postcode } = location;
     
