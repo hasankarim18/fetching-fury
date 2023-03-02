@@ -19,7 +19,8 @@ const displayCountries = (countries)=> {
 
     let countryList = countries;
 
-    let countryFirsTen = countryList.slice(0,10)
+  //  let countryFirsTen = countryList.slice(0,10)
+    let countryFirsTen = countryList
     
    countryFirsTen.map((country) => {
      //  console.log(country);
