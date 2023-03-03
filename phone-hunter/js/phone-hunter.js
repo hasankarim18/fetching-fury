@@ -3,21 +3,29 @@
 
 const loadPhones = async (search)=> {
     const url = " https://openapi.programming-hero.com/api/phones?search="+search;
+     const phoneContainer = document.getElementById("phone_container");
+     phoneContainer.innerHTML = "";
+      const errorEl = document.getElementById("error");
+      errorEl.innerHTML = "";
+    showSpinner(true)
 
   try {
     const res = await fetch(url)
     const data = await res.json()
        if (data.status === true) {
          const errorEl = document.getElementById("error");
-         errorEl.innerHTML=""
+         errorEl.classList.add('d-none')
           showPhones(data);
+          showSpinner(false)
        } else if (data.status === false) {
-         console.log(data);
+        // console.log(data);
+          showSpinner(false);
          noDataFound(data);
        }  
   
 
   } catch (error) {
+     showSpinner(false);
    showErrorMessage(error)
   } 
 }
@@ -25,9 +33,17 @@ const loadPhones = async (search)=> {
 // show phones
 const showPhones = (data)=> {
     const phoneContainer = document.getElementById("phone_container");
-    phoneContainer.innerHTML = ""
+    // phoneContainer.innerHTML = ""
 
-    const phones = data.data
+    let phones = data.data
+
+   // console.log(phones.length);
+
+    if(phones.length > 10 ){
+      phones = phones.slice(0 ,10)
+    }else {
+      phones = phones
+    }
     
     phones.forEach(phone => {
       //  console.log(phone);
@@ -93,29 +109,47 @@ const searchPhone = ()=> {
 
 document.getElementById("searchBtn").addEventListener("click", searchPhone);
 
-// search by enter 
-
-
-
 
 /******************************************Search functionality */
 
+/****show all start  */
+
+
+/****show all end */
+
+/*******************************************************************show and hide spinner start */
+const showSpinner = (status)=> {
+  
+  const spinnerEl = document.getElementById("spinner_container");
+  if(status === true){
+    spinnerEl.classList.remove("d-none");
+  }else {
+    spinnerEl.classList.add("d-none");
+  }
+}
+
+/******************************************************************* show and hide spinner end */
+
 const showErrorMessage = (error)=> {
     const errorEl = document.getElementById("error");
-
+    errorEl.innerHTML = "";
     const errorInfo = document.createElement('div');
+     errorEl.classList.remove("d-none");
     const info = `
         <div class="alert alert-danger text-center fs-3 fw-bold text-danger mt-5 "> ${error} !!!</div>
     `;
     errorInfo.innerHTML = info 
     errorEl.appendChild(errorInfo)
-    console.log(error);
+   // console.log(error);
 }
 
 const noDataFound = (data) => {
     const phoneContainer = document.getElementById("phone_container");
     phoneContainer.innerHTML = "";
+
   const errorEl = document.getElementById("error");
+  errorEl.classList.remove('d-none')
+  errorEl.innerHTML = "";
 
   const errorInfo = document.createElement("div");
   const info = `
@@ -125,7 +159,7 @@ const noDataFound = (data) => {
     `;
   errorInfo.innerHTML = info;
   errorEl.appendChild(errorInfo);
-  console.log(data);
+ // console.log(data);
 };
 
 
