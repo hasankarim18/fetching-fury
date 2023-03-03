@@ -66,3 +66,7 @@
     z-index: 4;
     padding: 20px;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}
