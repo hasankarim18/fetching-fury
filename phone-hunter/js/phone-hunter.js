@@ -1,26 +1,32 @@
 
 
 
-const loadPhones = async (search)=> {
+const loadPhones = async (search, dataLimit)=> {
     const url = " https://openapi.programming-hero.com/api/phones?search="+search;
+
      const phoneContainer = document.getElementById("phone_container");
      phoneContainer.innerHTML = "";
       const errorEl = document.getElementById("error");
       errorEl.innerHTML = "";
-    showSpinner(true)
-
-  try {
+      showSpinner(true)
+//  console.log(dataLimit);
+  try { 
     const res = await fetch(url)
     const data = await res.json()
        if (data.status === true) {
+
          const errorEl = document.getElementById("error");
          errorEl.classList.add('d-none')
-          showPhones(data);
+          showPhones(data,dataLimit);
           showSpinner(false)
+
+    //    processSearch(data, 10)
+
        } else if (data.status === false) {
         // console.log(data);
+          showAll(false);
           showSpinner(false);
-         noDataFound(data);
+          noDataFound(data);
        }  
   
 
@@ -31,17 +37,20 @@ const loadPhones = async (search)=> {
 }
 
 // show phones
-const showPhones = (data)=> {
+const showPhones = (data, dataLimit)=> {
     const phoneContainer = document.getElementById("phone_container");
     // phoneContainer.innerHTML = ""
 
     let phones = data.data
 
    // console.log(phones.length);
-
-    if(phones.length > 10 ){
+    console.log('length::: ',phones.length);
+     console.log(dataLimit);
+    if( dataLimit && phones.length > 10 ){
       phones = phones.slice(0 ,10)
+        showAll(true);
     }else {
+      showAll(false)
       phones = phones
     }
     
@@ -85,19 +94,17 @@ const showPhoneDetails = (data)=>{
  */
 
 /******************************************Search functionality */
+// process search 
 
+const processSearch = (dataLimit)=> {
+ const searchField = document.getElementById("searchText");
+ const searchText = searchField.value;
+ loadPhones(searchText, dataLimit);
+
+}
 
 const searchPhone = ()=> {
-  const searchField = document.getElementById("searchText");
-  const searchText = searchField.value
-
-  if(searchText !== ''){
-    console.log(searchText);
-    loadPhones(searchText);
-  }else {
-    alert('Input field cant be empty')
-  }
-
+ processSearch(10)
    
 }
 
@@ -113,7 +120,22 @@ document.getElementById("searchBtn").addEventListener("click", searchPhone);
 /******************************************Search functionality */
 
 /****show all start  */
+// not the best way to show all
+const showAll = (isShow) => {
+   const showAll = document.getElementById("show_more"); 
 
+   if(isShow){
+    showAll.classList.remove('d-none');
+   }else {
+    showAll.classList.add('d-none');
+   }
+
+}
+
+document.getElementById("btn_show_all").addEventListener('click', ()=> {
+  processSearch()
+   
+})
 
 /****show all end */
 
@@ -144,12 +166,12 @@ const showErrorMessage = (error)=> {
 }
 
 const noDataFound = (data) => {
-    const phoneContainer = document.getElementById("phone_container");
-    phoneContainer.innerHTML = "";
+  //  const phoneContainer = document.getElementById("phone_container");
+  //  phoneContainer.innerHTML = "";
 
   const errorEl = document.getElementById("error");
   errorEl.classList.remove('d-none')
-  errorEl.innerHTML = "";
+ // errorEl.innerHTML = "";
 
   const errorInfo = document.createElement("div");
   const info = `
@@ -163,4 +185,8 @@ const noDataFound = (data) => {
 };
 
 
-loadPhones('iphone')
+// process search 
+
+
+
+ loadPhones('iphone',10)
